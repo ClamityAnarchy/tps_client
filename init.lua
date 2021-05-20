@@ -1,9 +1,13 @@
 minetest.mod_channel_join("tps")
 
+tps_client={}
+tps_client.tps=0
+
 local hud
 
 minetest.register_on_modchannel_message(function(channel_name, sender, message)
 	if sender == "" and channel_name == "tps" and minetest.localplayer then
+		tps_client.tps=message
 		if hud then
 			minetest.localplayer:hud_change(hud, "text", message)
 		else
