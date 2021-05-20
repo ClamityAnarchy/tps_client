@@ -1,14 +1,12 @@
+tps_client = {}
 minetest.mod_channel_join("tps")
 
-local hud, ping_hud, ping
-tps_client={}
-tps_client.tps=0
-
-local hud
+local hud, ping_hud
 
 minetest.register_on_modchannel_message(function(channel_name, sender, message)
 	if sender == "" and channel_name == "tps" and minetest.localplayer then
-		tps_client.tps=message
+		tps_client.tps = tonumber(message)
+		tps_client.ping = 0
 		if hud then
 			minetest.localplayer:hud_change(hud, "text", message)
 		else
@@ -29,13 +27,12 @@ minetest.register_on_modchannel_message(function(channel_name, sender, message)
 				number = 0xFFF800,
 			})
 		end
-		ping = 0
 	end
 end)
 
 minetest.register_globalstep(function(dtime)
-	if ping then
-		ping = ping + dtime
-		minetest.localplayer:hud_change(ping_hud, "text", tostring(math.floor(ping * 1000)))
+	if tps_client.ping then
+		tps_client.ping = tps_client.ping + dtime
+		minetest.localplayer:hud_change(ping_hud, "text", tostring(math.floor(tps_client.ping * 1000)))
 	end
 end)
